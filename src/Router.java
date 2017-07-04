@@ -82,9 +82,11 @@ public class Router {
         for(int i = 0; i < size; i++){
 
             // Don't process this router   (i != thisRouter)
-            // Don't process non-connections   (neighbor[i])
+            // Don't process non-connections   (pktCost[i] < INFINITY)
             // Don't process the initial values  (i != source)
-            if(i != thisRouter && neighbor[i] && i != source){
+            if(i != thisRouter &&
+                    pktCost[i] < INFINITY &&
+                    i != source){
 
                 // Update distance table with packets cost + cost to get their
                 int cost = distanceTable[source][source];

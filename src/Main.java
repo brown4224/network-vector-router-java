@@ -138,14 +138,5 @@ public class Main {
             q.add(new DelivoryQueue(clock + delay, rtpkt ));
 
         }
-
-        // Delay
-//        long clock = System.currentTimeMillis();
-//        while (clock < connectionCost[source][destination]){
-//            clock = System.currentTimeMillis();
-//        }
-
-        // Deliver Package
-        // Switch Statement
     }
 }
