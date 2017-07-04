@@ -24,7 +24,7 @@ public class Main {
         //  -1 means not connected
         for (int i = 0; i < size; i++){
             for (int j = 0; j < size; j++){
-                connectionCost[size][size] = -1;
+                connectionCost[i][j] = -1;
             }
         }
 
@@ -70,7 +70,7 @@ public class Main {
         // Go through queue until all tables are updated
         boolean run = true;
         while (run){
-            if (q.size() <= 0){
+            if (q.size() < 1){
                 run = false;  // List empty, we are done
             } else {
                 // Process list
@@ -93,12 +93,16 @@ public class Main {
 
     }
     private static void delivoryService(){
+        if(q.size()== 8){
+            boolean f = true;
+        }
+        System.out.printf("Array list Size: " + q.size());
         for(int i =0; i < q.size(); i++){
 
             DelivoryQueue item = q.get(i);
             long delivoryTime = item.getDelivoryTime();
 
-            if(System.currentTimeMillis() <= delivoryTime){
+            if(System.currentTimeMillis() >= delivoryTime){
                 // Deliver Message
                 int dest = item.getRtpkt().getDestinationID();
                 switch (dest){

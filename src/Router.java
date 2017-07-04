@@ -122,19 +122,24 @@ public class Router {
         }
     }
 
-    @Override
     public void toString(String message){
         int count = 0;
         System.out.printf("\n\n");
         System.out.printf("Message: " + message + "\n");
         System.out.printf("                via     \n");
-        System.out.printf("Router %1d |    1     2    3 \n", thisRouter);
-        System.out.printf(" -----|-----------------\n");
+        System.out.printf("Router %1d |    0    1     2    3 \n", thisRouter);
+        System.out.printf(" --------|-----------------------\n");
         for (int i = 0; i< size; i++){
             if(count != thisRouter){
-                System.out.printf("dest  %1d| %3d   %3d   %3d\n", i, distanceTable[i][0],distanceTable[i][1],distanceTable[i][2] );
+                System.out.printf("dest    %1d| %3d   %3d   %3d   %3d\n", i, distanceTable[i][0],distanceTable[i][1],distanceTable[i][2],distanceTable[i][3] );
             }
             count++;
         }
+        System.out.printf("\n");
+        System.out.printf("Router: " + thisRouter + " MinCost: [");
+        for (int i =0; i < size; i++){
+            System.out.printf("%3d, ", minCost[i] );
+        }
+        System.out.printf("]\n");
     }
 }
