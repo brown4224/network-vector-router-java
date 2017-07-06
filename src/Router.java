@@ -2,8 +2,15 @@
  * Created by Sean on 7/4/2017.
  */
 public class Router {
-    private static int ID = 0;  // counter for router ID
 
+    /**
+     *  True: each router prints after it updates.
+     *  False: only print from main function
+     */
+    private boolean printEachStep = false;
+
+
+    private static int ID = 0;  // counter for router ID
     private final int INFINITY = 999;
     private int size = 4;
     private final int thisRouter = ID;
@@ -66,13 +73,63 @@ public class Router {
                 }
             }
         }
-        // Print table
-        String str = "Initial table:  Router: " + thisRouter;
-        toString(str);
+        if(printEachStep){
+            // Print table
+            String str = "Initial table:  Router: " + thisRouter;
+            toString(str);
+        }
+
 
         // Send to other routers
         sendrt(thisRouter, minCost);
     }
+
+//    public void rtupdate( Package rtpkt){
+//        int source = rtpkt.getSourceID();
+//        int[] pktCost = rtpkt.getMinCost();
+//        int connectionCost = rtpkt.getConnectionCost();
+//        boolean flag = false;
+//
+//        // If distance between routers changed.  Re-Initialize values
+////        if(distanceTable[source][source] != connectionCost){
+////            for(int i = 0; i < size; i++){
+////                distanceTable[i][source] = INFINITY;
+////            }
+////            distanceTable[source][source] = connectionCost;
+////            minCost[source] = connectionCost;
+////        }
+//
+//
+//        for(int i = 0; i < size; i++){
+//
+//            // Don't process this router   (i != thisRouter)
+//            // Don't process non-connections   (pktCost[i] < INFINITY)
+//            // Don't process the initial values  (i != source)
+//            if(i != thisRouter &&
+//                    pktCost[i] < INFINITY &&
+//                    i != source){
+//
+//                // Update distance table with packets cost + cost to get their
+//                int cost = distanceTable[source][source];
+//                distanceTable[i][source] = pktCost[i] + cost;
+//
+//                // If mincost changed
+//                if (minCost[i] >  distanceTable[i][source]){
+//                    minCost[i] = distanceTable[i][source];
+//                    flag = true;
+//                }
+//            }
+//        }
+//
+//        if (printEachStep){
+//            if(flag){
+//                toString("Updated Min Cost");
+//                sendrt(thisRouter, minCost);
+//            }  else {
+//                toString("");
+//            }
+//        }
+//    }
 
     public void rtupdate( Package rtpkt){
         int source = rtpkt.getSourceID();
@@ -101,13 +158,40 @@ public class Router {
         }
 
         if(flag){
-            toString("Updated Min Cost");
+//            toString("Updated Min Cost");
             sendrt(thisRouter, minCost);
         }  else {
-            toString("");
+//            toString("");
         }
     }
 
+    // Takes the router number as ID
+    public void linkCostChangeHandler(int connectedRouter, int newCost){
+
+        // Router can't update it's self
+//        if(thisRouter == connectedRouter) return;
+
+        int update = newCost - distanceTable[connectedRouter][connectedRouter];
+
+        // Update distance table
+        for(int i = 0; i < size; i++){
+            distanceTable[i][connectedRouter] += update;
+        }
+//        resetMinCost();
+        // Reset and Update Mincost
+        minCost[connectedRouter] = distanceTable[connectedRouter][connectedRouter];
+        for(int i = 0; i < size; i++){
+            if (minCost[connectedRouter] > distanceTable[i][connectedRouter] )
+                minCost[connectedRouter] = distanceTable[i][connectedRouter];
+        }
+
+        if (printEachStep){
+            String str = "Updating Table:  New value: " + newCost + " for link { " + thisRouter + ", " + connectedRouter + "}\n";
+            toString(str);
+        }
+
+        sendrt(thisRouter, minCost);
+    }
 
     /**
      * This function take the source node and mincost.
@@ -119,7 +203,7 @@ public class Router {
     private void sendrt(int source, int[] cost){
         for (int i = 0; i < size; i++){
             if (neighbor[i] && i != thisRouter){  // If there is connection and not the same router
-                Main.toLayer2(new Package(source, i, cost));
+                Main.toLayer2(new Package(source, i, cost, distanceTable[i][i]));
             }
         }
     }
@@ -144,4 +228,16 @@ public class Router {
         }
         System.out.printf("]\n");
     }
+
+//    private void resetMinCost(){
+//        for (int i = 0; i< size; i++){
+//            minCost[i] = distanceTable[i][i];
+//        }
+//        for (int i = 0; i< size; i++){
+//            for (int j = 0; j< size; j++){
+//                if(minCost[j] > distanceTable[i][j])
+//                    minCost[j] = distanceTable[i][j];
+//            }
+//        }
+//    }
 }

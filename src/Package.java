@@ -4,13 +4,15 @@
 public class Package {
     private int sourceID;
     private int destinationID;
+    private int connectionCost;
     private int [] minCost = new int [4];
 
     // New Package
-    public Package(int sourceID, int destinationID, int[] minCost) {
+    public Package(int sourceID, int destinationID, int[] minCost, int connectionCost) {
         this.sourceID = sourceID;
         this.destinationID = destinationID;
         this.minCost = minCost;
+        this.connectionCost = connectionCost;
     }
 
     // Copy Existing Package
@@ -30,5 +32,13 @@ public class Package {
 
     public int[] getMinCost() {
         return minCost;
+    }
+
+    public int getConnectionCost() {
+        return connectionCost;
+    }
+
+    public void setConnectionCost(int connectionCost) {
+        this.connectionCost = connectionCost;
     }
 }
