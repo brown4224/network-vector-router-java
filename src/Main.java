@@ -70,7 +70,7 @@ public class Main {
          */
 
         //  update Router 0: {0, 3} to value 2
-//        updateQueue.add(new LinkUpdateQueue(0,3,2));
+        updateQueue.add(new LinkUpdateQueue(0,3,2));
 
 //        //  update Router 1: {1, 0) to value 5
 //        updateQueue.add((new LinkUpdateQueue(1,0,5)));
@@ -126,51 +126,50 @@ public class Main {
             System.out.printf("###########     END    ##############\n");
             System.out.printf("#####################################\n");
 
-            run = false;
 
             //  Send a new VALUE to router
-//            if(updateQueue.size() > 0){
-//                LinkUpdateQueue newLink = updateQueue.remove(0);
-//
-//                int value = newLink.getNewValue();
-//                int router = newLink.getRouter();
-//                int destRouter = newLink.getConnectedRouter();
-//
-//                if(value > 0 && value < INFINITY && router != destRouter){
-//
-//                    System.out.printf("\n\n");
-//                    System.out.printf("#####################################\n");
-//                    System.out.printf("Updating Router:  New value: " + value + " for link { " + router + ", " + destRouter + "}\n");
-//                    System.out.printf("#####################################\n");
-//
-//                    connectionCost[router][destRouter] = value;
-//                    connectionCost[destRouter][router] = value;
-//
-//                    switch (router){
-//                        case 0:
-//                            router0.linkCostChangeHandler(destRouter, value);
-//                            break;
-//                        case 1:
-//                            router1.linkCostChangeHandler(destRouter, value);
-//                            break;
-//                        case 2:
-//                            router2.linkCostChangeHandler(destRouter, value);
-//                            break;
-//                        case 3:
-//                            router3.linkCostChangeHandler(destRouter, value);
-//                            break;
-//                        default:
-//                            System.out.println("An error occurred when updating Router Link");
-//                            System.out.println("See Main function");
-//                            System.exit(1);
-//                    }
-//
-//                }
-//
-//            } else {
-//                // Program is done
-//                run = false;
-//            }
+            if(updateQueue.size() > 0){
+                LinkUpdateQueue newLink = updateQueue.remove(0);
+
+                int value = newLink.getNewValue();
+                int router = newLink.getRouter();
+                int destRouter = newLink.getConnectedRouter();
+
+                if(value > 0 && value < INFINITY && router != destRouter){
+
+                    System.out.printf("\n\n");
+                    System.out.printf("#####################################\n");
+                    System.out.printf("Updating Router:  New value: " + value + " for link { " + router + ", " + destRouter + "}\n");
+                    System.out.printf("#####################################\n");
+
+                    connectionCost[router][destRouter] = value;
+                    connectionCost[destRouter][router] = value;
+
+                    switch (router){
+                        case 0:
+                            router0.linkCostChangeHandler(destRouter, value);
+                            break;
+                        case 1:
+                            router1.linkCostChangeHandler(destRouter, value);
+                            break;
+                        case 2:
+                            router2.linkCostChangeHandler(destRouter, value);
+                            break;
+                        case 3:
+                            router3.linkCostChangeHandler(destRouter, value);
+                            break;
+                        default:
+                            System.out.println("An error occurred when updating Router Link");
+                            System.out.println("See Main function");
+                            System.exit(1);
+                    }
+
+                }
+
+            } else {
+                // Program is done
+                run = false;
+            }
 
 
         }
