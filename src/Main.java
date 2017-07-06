@@ -81,7 +81,7 @@ public class Main {
 //
 //        // Change back
 //        //  update Router 0: {0, 3} to value 7
-//        updateQueue.add(new LinkUpdateQueue(0,3,7));
+        updateQueue.add(new LinkUpdateQueue(0,3,7));
 //
 //        //  update Router 1: {1, 0) to value 1
 //        updateQueue.add((new LinkUpdateQueue(1,0,1)));

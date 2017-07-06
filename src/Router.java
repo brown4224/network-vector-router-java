@@ -89,6 +89,7 @@ public class Router {
         int source = rtpkt.getSourceID();
         int[] pktCost = rtpkt.getMinCost();
         int connectionCost = rtpkt.getConnectionCost();
+//        boolean forceUpdate = rtpkt.g
 
         boolean flag = false;
 
@@ -142,15 +143,11 @@ public class Router {
         // Update distance table
         for(int i = 0; i < size; i++){
             distanceTable[i][connectedRouter] += update;
+            resetMinCost();
         }
-//        minCost[connectedRouter] += update;
-        resetMinCost();
         // Reset and Update Mincost
-//        minCost[connectedRouter] = distanceTable[connectedRouter][connectedRouter];
-//        for(int i = 0; i < size; i++){
-//            if (minCost[connectedRouter] > distanceTable[i][connectedRouter] )
-//                minCost[connectedRouter] = distanceTable[i][connectedRouter];
-//        }
+//        resetMinCost();
+
 
         if (printEachStep){
             String str = "Updating Table:  New value: " + newCost + " for link { " + thisRouter + ", " + connectedRouter + "}\n";
@@ -168,6 +165,7 @@ public class Router {
      * @param cost :    INT [] this.mincost
      */
     private void sendrt(int source, int[] cost){
+        resetMinCost();
         for (int i = 0; i < size; i++){
             if (neighbor[i] && i != thisRouter){  // If there is connection and not the same router
                 Main.toLayer2(new Package(source, i, cost, distanceTable[i][i]));
@@ -197,14 +195,31 @@ public class Router {
     }
 
     private void resetMinCost(){
-        for (int i = 0; i< size; i++){
-            minCost[i] = distanceTable[i][i];
+        minCost[0] = distanceTable[0][0];
+        minCost[1] = distanceTable[1][1];
+        minCost[2] = distanceTable[2][2];
+        minCost[3] = distanceTable[3][3];
+        for (int i = 0; i < size; i++){
+            if (minCost[0] > distanceTable[0][i])
+                minCost[0] = distanceTable[0][i];
+            if (minCost[1] > distanceTable[1][i])
+                minCost[1] = distanceTable[1][i];
+            if (minCost[2] > distanceTable[2][i])
+                minCost[2] = distanceTable[2][i];
+            if (minCost[3] > distanceTable[3][i])
+                minCost[3] = distanceTable[3][i];
         }
-        for (int i = 0; i< size; i++){
-            for (int j = 0; j< size; j++){
-                if(minCost[j] > distanceTable[i][j])
-                    minCost[j] = distanceTable[i][j];
-            }
-        }
+
+
     }
+//        for (int i = 0; i< size; i++){
+//            minCost[i] = distanceTable[i][i];
+//        }
+//        for (int i = 0; i< size; i++){
+//            for (int j = 0; j< size; j++){
+//                if(minCost[j] > distanceTable[i][j])
+//                    minCost[j] = distanceTable[i][j];
+//            }
+//        }
+//    }
 }
