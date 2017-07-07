@@ -18,7 +18,7 @@ public class Router {
     // Arrays
     private int [] initialCost;
     private int [] minCost = new int[size];
-    private boolean[] neighbor = new boolean[size];
+//    private boolean[] neighbor = new boolean[size];
     private int [][] distanceTable = new int[size][size];
 
 
@@ -47,7 +47,7 @@ public class Router {
         // Intialize Arrays:  Set everything to INFINITY
         for (int i = 0; i < size; i++){
             // 1-D arrays
-            neighbor[i] = false;
+//            neighbor[i] = false;
             minCost[i] = INFINITY;
 
             // 2-D arrays
@@ -67,9 +67,9 @@ public class Router {
                     minCost[i] = initialCost[i];
 
                     // Set neighbors
-                    if(initialCost[i] > 0 && initialCost[i] < INFINITY){
-                        neighbor[i] = true;
-                    }
+//                    if(initialCost[i] > 0 && initialCost[i] < INFINITY){
+//                        neighbor[i] = true;
+//                    }
                 }
             }
         }
@@ -81,7 +81,7 @@ public class Router {
 
 
         // Send to other routers
-        sendrt(thisRouter, minCost);
+        sendrt();
     }
 
 
@@ -89,19 +89,20 @@ public class Router {
         int source = rtpkt.getSourceID();
         int[] pktCost = rtpkt.getMinCost();
         int connectionCost = rtpkt.getConnectionCost();
-//        boolean forceUpdate = rtpkt.g
 
         boolean flag = false;
 
         // If distance between routers changed.  Re-Initialize values
-        if(distanceTable[source][source] != connectionCost){
-            for(int i = 0; i < size; i++){
-                distanceTable[i][source] = INFINITY;
-            }
-            distanceTable[source][source] = connectionCost;
-            resetMinCost();
-//            minCost[source] = connectionCost;
-        }
+//        if(distanceTable[source][source] != connectionCost){
+//            for(int i = 0; i < size; i++){
+//                distanceTable[i][source] = INFINITY;
+//            }
+//            distanceTable[source][source] = connectionCost;
+//            resetMinCost();
+//        }
+//        resetMinCost();
+
+
 //        resetMinCost();
         for(int i = 0; i < size; i++){
 
@@ -128,7 +129,7 @@ public class Router {
         }
 
         if(flag){
-            sendrt(thisRouter, minCost);
+            sendrt();
         }
     }
 
@@ -142,19 +143,24 @@ public class Router {
 
         // Update distance table
         for(int i = 0; i < size; i++){
-            distanceTable[i][connectedRouter] += update;
-            resetMinCost();
-        }
-        // Reset and Update Mincost
-//        resetMinCost();
+            if(newCost < INFINITY)
+                distanceTable[i][connectedRouter] += update;
+            else
+                distanceTable[i][connectedRouter] = INFINITY;
 
+        }
+
+
+
+        distanceTable[connectedRouter][connectedRouter] = newCost;
+//        minCost[connectedRouter] = newCost;
+//                resetMinCost();
 
         if (printEachStep){
             String str = "Updating Table:  New value: " + newCost + " for link { " + thisRouter + ", " + connectedRouter + "}\n";
             toString(str);
         }
-
-        sendrt(thisRouter, minCost);
+        sendrt();
     }
 
     /**
@@ -164,11 +170,14 @@ public class Router {
      * @param source :  INT this.router
      * @param cost :    INT [] this.mincost
      */
-    private void sendrt(int source, int[] cost){
+    private void sendrt(){
         resetMinCost();
+
         for (int i = 0; i < size; i++){
-            if (neighbor[i] && i != thisRouter){  // If there is connection and not the same router
-                Main.toLayer2(new Package(source, i, cost, distanceTable[i][i]));
+            if (distanceTable[i][i] < INFINITY && i != thisRouter){  // If there is connection and not the same router
+
+//            if (neighbor[i] && i != thisRouter){  // If there is connection and not the same router
+                Main.toLayer2(new Package(thisRouter, i, minCost, distanceTable[i][i]));
             }
         }
     }
@@ -209,17 +218,5 @@ public class Router {
             if (minCost[3] > distanceTable[3][i])
                 minCost[3] = distanceTable[3][i];
         }
-
-
     }
-//        for (int i = 0; i< size; i++){
-//            minCost[i] = distanceTable[i][i];
-//        }
-//        for (int i = 0; i< size; i++){
-//            for (int j = 0; j< size; j++){
-//                if(minCost[j] > distanceTable[i][j])
-//                    minCost[j] = distanceTable[i][j];
-//            }
-//        }
-//    }
 }

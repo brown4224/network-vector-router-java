@@ -70,10 +70,17 @@ public class Main {
          */
 
         //  update Router 0: {0, 3} to value 2
-        updateQueue.add(new LinkUpdateQueue(0,3,2));
+//        updateQueue.add(new LinkUpdateQueue(0,3,2));
 
 //        //  update Router 1: {1, 0) to value 5
-//        updateQueue.add((new LinkUpdateQueue(1,0,5)));
+        updateQueue.add((new LinkUpdateQueue(0,1,3)));
+
+//        updateQueue.add((new LinkUpdateQueue(1,0,INFINITY)));
+        updateQueue.add((new LinkUpdateQueue(1,0,1)));
+
+        //        updateQueue.add((new LinkUpdateQueue(0,1,1)));
+//        updateQueue.add((new LinkUpdateQueue(1,0,1)));
+
 //
 //        //  update Router 2: {2, 1} to Value 3
 //        updateQueue.add(new LinkUpdateQueue(2,1,3));
@@ -81,7 +88,7 @@ public class Main {
 //
 //        // Change back
 //        //  update Router 0: {0, 3} to value 7
-        updateQueue.add(new LinkUpdateQueue(0,3,7));
+//        updateQueue.add(new LinkUpdateQueue(0,3,7));
 //
 //        //  update Router 1: {1, 0) to value 1
 //        updateQueue.add((new LinkUpdateQueue(1,0,1)));
@@ -135,7 +142,9 @@ public class Main {
                 int router = newLink.getRouter();
                 int destRouter = newLink.getConnectedRouter();
 
-                if(value > 0 && value < INFINITY && router != destRouter){
+
+                if(value > 0  && router != destRouter){
+//                if(value > 0 && value < INFINITY && router != destRouter){
 
                     System.out.printf("\n\n");
                     System.out.printf("#####################################\n");
@@ -148,6 +157,7 @@ public class Main {
                     switch (router){
                         case 0:
                             router0.linkCostChangeHandler(destRouter, value);
+
                             break;
                         case 1:
                             router1.linkCostChangeHandler(destRouter, value);
@@ -164,6 +174,26 @@ public class Main {
                             System.exit(1);
                     }
 
+                    switch (destRouter){
+                        case 0:
+                            router0.linkCostChangeHandler(router, value);
+
+                            break;
+                        case 1:
+                            router1.linkCostChangeHandler(router, value);
+                            break;
+                        case 2:
+                            router2.linkCostChangeHandler(router, value);
+                            break;
+                        case 3:
+                            router3.linkCostChangeHandler(router, value);
+                            break;
+                        default:
+                            System.out.println("An error occurred when updating Router Link");
+                            System.out.println("See Main function");
+                            System.exit(1);
+                    }
+
                 }
 
             } else {
@@ -173,11 +203,6 @@ public class Main {
 
 
         }
-
-
-
-
-
 
     }
     private static void delivoryService(){
