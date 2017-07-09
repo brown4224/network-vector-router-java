@@ -1,3 +1,11 @@
+/**
+ * Sean McGlincy
+ * Networking
+ * Assignment 6
+ * Distance Vector Routing Algorithm
+ */
+
+
 import java.util.ArrayList;
 
 /**
@@ -7,7 +15,7 @@ public class Main {
 
     private static int INFINITY = 999;
     private static int size = 4;
-    private static int [][] connectionCost = new int[size][size];  // Used by toLayer2
+    private static int[][] connectionCost = new int[size][size];  // Used by toLayer2
     private static Router router0;
     private static Router router1;
     private static Router router2;
@@ -24,8 +32,8 @@ public class Main {
 
         //  Initialize Connection Cost
         //  -1 means not connected
-        for (int i = 0; i < size; i++){
-            for (int j = 0; j < size; j++){
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
                 connectionCost[i][j] = -1;
             }
         }
@@ -69,43 +77,18 @@ public class Main {
          * A router will not be allowed to update itself.
          */
 
-        //  update Router 0: {0, 3} to value 2
-//        updateQueue.add(new LinkUpdateQueue(0,3,2));
+        //  update Router 0: {0, 3} to value 3
+        //  Then change back
 
-//        //  update Router 1: {1, 0) to value 5
-        updateQueue.add((new LinkUpdateQueue(0,1,3)));
-
-//        updateQueue.add((new LinkUpdateQueue(1,0,INFINITY)));
-        updateQueue.add((new LinkUpdateQueue(1,0,1)));
-
-        //        updateQueue.add((new LinkUpdateQueue(0,1,1)));
-//        updateQueue.add((new LinkUpdateQueue(1,0,1)));
-
-//
-//        //  update Router 2: {2, 1} to Value 3
-//        updateQueue.add(new LinkUpdateQueue(2,1,3));
-//
-//
-//        // Change back
-//        //  update Router 0: {0, 3} to value 7
-//        updateQueue.add(new LinkUpdateQueue(0,3,7));
-//
-//        //  update Router 1: {1, 0) to value 1
-//        updateQueue.add((new LinkUpdateQueue(1,0,1)));
-//
-//        //  update Router 2: {2, 1} to Value 1
-//        updateQueue.add(new LinkUpdateQueue(2,1,1));
-//
-
-
+        updateQueue.add((new LinkUpdateQueue(0, 1, 3)));
+        updateQueue.add((new LinkUpdateQueue(1, 0, 1)));
 
 
         // Start Program
-
-         router0 = new Router(0, 1, 3, 7);
-         router1 = new Router(1, 0, 1, INFINITY);
-         router2 = new Router(3, 1, 0, 2);
-         router3 = new Router(7, INFINITY, 2, 0);
+        router0 = new Router(0, 1, 3, 7);
+        router1 = new Router(1, 0, 1, INFINITY);
+        router2 = new Router(3, 1, 0, 2);
+        router3 = new Router(7, INFINITY, 2, 0);
 
         router0.rtinit();
         router1.rtinit();
@@ -115,7 +98,7 @@ public class Main {
 
         // Go through queue until all tables are updated
         boolean run = true;   // Simulation
-        while (run){
+        while (run) {
 
             // Process list
             // See if message has needs to be delivered
@@ -135,7 +118,7 @@ public class Main {
 
 
             //  Send a new VALUE to router
-            if(updateQueue.size() > 0){
+            if (updateQueue.size() > 0) {
                 LinkUpdateQueue newLink = updateQueue.remove(0);
 
                 int value = newLink.getNewValue();
@@ -143,9 +126,7 @@ public class Main {
                 int destRouter = newLink.getConnectedRouter();
 
 
-                if(value > 0  && router != destRouter){
-//                if(value > 0 && value < INFINITY && router != destRouter){
-
+                if (value > 0 && router != destRouter) {
                     System.out.printf("\n\n");
                     System.out.printf("#####################################\n");
                     System.out.printf("Updating Router:  New value: " + value + " for link { " + router + ", " + destRouter + "}\n");
@@ -154,7 +135,7 @@ public class Main {
                     connectionCost[router][destRouter] = value;
                     connectionCost[destRouter][router] = value;
 
-                    switch (router){
+                    switch (router) {
                         case 0:
                             router0.linkCostChangeHandler(destRouter, value);
 
@@ -174,7 +155,7 @@ public class Main {
                             System.exit(1);
                     }
 
-                    switch (destRouter){
+                    switch (destRouter) {
                         case 0:
                             router0.linkCostChangeHandler(router, value);
 
@@ -205,17 +186,18 @@ public class Main {
         }
 
     }
-    private static void delivoryService(){
-        while (q.size() > 0){
-            for(int i =0; i < q.size(); i++){
+
+    private static void delivoryService() {
+        while (q.size() > 0) {
+            for (int i = 0; i < q.size(); i++) {
 
                 DelivoryQueue item = q.get(i);
                 long delivoryTime = item.getDelivoryTime();
 
-                if(System.currentTimeMillis() >= delivoryTime){
+                if (System.currentTimeMillis() >= delivoryTime) {
                     // Deliver Message
                     int dest = item.getRtpkt().getDestinationID();
-                    switch (dest){
+                    switch (dest) {
                         case 0:
                             router0.rtupdate(item.getRtpkt());
                             break;
@@ -237,14 +219,14 @@ public class Main {
     }
 
 
-    public static void toLayer2(Package rtpkt){
+    public static void toLayer2(Package rtpkt) {
         int source = rtpkt.getSourceID();
         int destination = rtpkt.getDestinationID();
 
-        if(source != destination){
+        if (source != destination) {
             long clock = System.currentTimeMillis();
             long delay = connectionCost[source][destination];
-            q.add(new DelivoryQueue(clock + delay, rtpkt ));
+            q.add(new DelivoryQueue(clock + delay, rtpkt));
 
         }
     }

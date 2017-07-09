@@ -1,18 +1,24 @@
 /**
+ * Sean McGlincy
+ * Networking
+ * Assignment 6
+ * Distance Vector Routing Algorithm
+ */
+
+
+/**
  * Created by Sean on 7/4/2017.
  */
 public class Package {
     private int sourceID;
     private int destinationID;
-    private int connectionCost;
-    private int [] minCost = new int [4];
+    private int[] minCost = new int[4];
 
     // New Package
-    public Package(int sourceID, int destinationID, int[] minCost, int connectionCost) {
+    public Package(int sourceID, int destinationID, int[] minCost) {
         this.sourceID = sourceID;
         this.destinationID = destinationID;
         this.minCost = minCost;
-        this.connectionCost = connectionCost;
     }
 
     // Copy Existing Package
@@ -32,13 +38,5 @@ public class Package {
 
     public int[] getMinCost() {
         return minCost;
-    }
-
-    public int getConnectionCost() {
-        return connectionCost;
-    }
-
-    public void setConnectionCost(int connectionCost) {
-        this.connectionCost = connectionCost;
     }
 }

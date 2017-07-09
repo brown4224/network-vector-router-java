@@ -1,4 +1,12 @@
 /**
+ * Sean McGlincy
+ * Networking
+ * Assignment 6
+ * Distance Vector Routing Algorithm
+ */
+
+
+/**
  * Created by Sean on 7/6/2017.
  */
 public class LinkUpdateQueue {
